@@ -1,20 +1,17 @@
-# Use an official Node.js runtime as a parent image
-FROM node:14
+# Use the official Nginx image from the Docker Hub
+FROM nginx:alpine
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Install git to clone the repository
+RUN apk update && apk add git
 
-# Copy the package.json and package-lock.json
-COPY package*.json ./
+# Clone the Git repository (replace the URL with your repository)
+RUN git clone https://github.com/yourusername/your-repo.git /usr/share/nginx/html
 
-# Install dependencies
-RUN npm install
+# Expose port 80 for the web server
+EXPOSE 80
 
-# Copy the rest of the app
-COPY . .
+# Copy a custom Nginx config file (optional, if you want to configure something specific)
+# COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose the port the app runs on
-EXPOSE 8080
-
-# Define the command to run the app
-CMD [ "npm", "start" ]
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]
