@@ -5,7 +5,7 @@ FROM nginx:alpine
 RUN apk update && apk add git
 
 # Clone the Git repository (replace the URL with your repository)
-RUN git clone https://github.com/yourusername/your-repo.git /usr/share/nginx/html
+RUN git clone https://github.com/harjyot08/my-car.git /usr/share/nginx/html
 
 # Expose port 80 for the web server
 EXPOSE 80
