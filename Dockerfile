@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # Install git to clone the repository
-RUN apk update && apk add git
+RUN apk update && apk add git && apk update
 
 # Clone the Git repository (replace the URL with your repository)
 RUN git clone https://github.com/harjyot08/my-car.git /usr/share/nginx/html
