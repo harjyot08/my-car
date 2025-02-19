@@ -1,14 +1,20 @@
-# Use NGINX as the base image
-FROM nginx:alpine
+# Use the official Ubuntu image from the Docker Hub
+FROM ubuntu:latest
 
-# Install git
-RUN apk update && apk add git && apk update
+# Maintainer info
+MAINTAINER harjyot@maxxmann.in
 
-# Remove any existing content in the target directory before cloning
-RUN rm -rf /usr/share/nginx/html/*
+# Update the package list and install required packages
+RUN apt update && apt install -y apache2 zip unzip git
 
-# Clone the Git repository into the directory
-RUN git clone https://github.com/harjyot08/my-car.git /usr/share/nginx/html
+# Clone the Git repository into /var/www/html
+RUN git clone https://github.com/harjyot08/my-car.git /var/www/html
 
-# Expose port 80 for the web server
+# Set the working directory to /var/www/html
+WORKDIR /var/www/html
+
+# Expose port 80 to the outside world
 EXPOSE 80
+
+# Start Apache in the foreground when the container runs
+CMD ["apachectl", "-D", "FOREGROUND"]
