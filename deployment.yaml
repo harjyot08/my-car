@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-car-deployment  # Name of the Deployment
+  labels:
+    app: my-car  # Label to associate resources with this app
+spec:
+  replicas: 3  # Number of replicas (pods) to run
+  selector:
+    matchLabels:
+      app: my-car  # Match pods with the 'app: my-car' label
+  template:
+    metadata:
+      labels:
+        app: my-car  # Label the pod with the same app name
+    spec:
+      containers:
+        - name: my-car-container  # Container name
+          image: my-car-image:latest  # Container image (change this to the correct image)
+          ports:
+            - containerPort: 8080  # Port exposed by the container
+          env:
+            - name: ENV_VAR_NAME
+              value: "value"  # Optional: Set environment variables inside the container
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-car-service
+spec:
+  selector:
+    app: my-car  # Match the 'app: my-car' label
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080  # The port the container listens on
+  type: ClusterIP  # Internal service within the cluster
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-car-ingress
+spec:
+  rules:
+    - host: my-car-app.example.com  # Domain for accessing your app (adjust this)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-car-service
+                port:
+                  number: 80
